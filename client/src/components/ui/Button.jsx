@@ -12,7 +12,7 @@ const sizes = {
     lg: "h-14 px-7 text-base",
 };
 
-function Button({ children, to, type = "button", variant = "primary", size = "md", className = "" }) {
+function Button({ children, to, type = "button", variant = "primary", size = "md", className = "", disabled = false, onClick }) {
     const classes = [
         "inline-flex items-center justify-center rounded-full font-semibold transition focus:outline-none focus:ring-4 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:opacity-60",
         variants[variant],
@@ -29,7 +29,7 @@ function Button({ children, to, type = "button", variant = "primary", size = "md
     }
 
     return (
-        <button type={type} className={classes}>
+        <button type={type} className={classes} disabled={disabled} onClick={onClick}>
             {children}
         </button>
     );

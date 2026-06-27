@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Button from "../ui/Button";
 
-function AuthCard({ title, subtitle, submitLabel, footerText, footerLinkLabel, footerLinkTo, children }) {
+function AuthCard({ title, subtitle, submitLabel, footerText, footerLinkLabel, footerLinkTo, onSubmit, isSubmitting, error, children }) {
     return (
         <section className="mx-auto grid min-h-[calc(100vh-9rem)] w-full max-w-6xl items-center gap-10 lg:grid-cols-[0.95fr_1.05fr]">
             <div className="hidden lg:block">
@@ -24,11 +24,17 @@ function AuthCard({ title, subtitle, submitLabel, footerText, footerLinkLabel, f
                     <p className="mt-3 text-sm leading-6 text-slate-500">{subtitle}</p>
                 </div>
 
-                <form className="space-y-5">
+                <form className="space-y-5" onSubmit={onSubmit} noValidate>
                     {children}
 
-                    <Button type="submit" className="w-full">
-                        {submitLabel}
+                    {error && (
+                        <div className="rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                            {error}
+                        </div>
+                    )}
+
+                    <Button type="submit" className="w-full" disabled={isSubmitting}>
+                        {isSubmitting ? "Проверка..." : submitLabel}
                     </Button>
                 </form>
 

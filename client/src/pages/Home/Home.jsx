@@ -37,10 +37,10 @@ function Home() {
                     </p>
 
                     <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                        <Button to="/dashboard" size="lg">
+                        <Button to="/dashboard/organizer/create" size="lg">
                             Создать квиз
                         </Button>
-                        <Button to="/login" variant="secondary" size="lg">
+                        <Button to="/dashboard/participant/join" variant="secondary" size="lg">
                             Присоединиться
                         </Button>
                     </div>

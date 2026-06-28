@@ -128,9 +128,16 @@ function handleSocketError(socket, error) {
 }
 
 export function initializeSocket(httpServer) {
+    // const io = new Server(httpServer, {
+    //     cors: {
+    //         origin: env.allowedClientOrigins,
+    //         credentials: true,
+    //     },
+    // });
+
     const io = new Server(httpServer, {
         cors: {
-            origin: env.allowedClientOrigins,
+            origin: true,
             credentials: true,
         },
     });

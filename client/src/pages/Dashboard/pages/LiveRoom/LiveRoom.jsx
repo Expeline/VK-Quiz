@@ -187,11 +187,11 @@ function LiveRoom() {
         const isReveal = room?.phase === "REVEAL" || room?.status === "FINISHED";
 
         if (isReveal && showResults && isCorrect) {
-            return "border-emerald-500 bg-emerald-50 text-emerald-900 ring-2 ring-emerald-200";
+            return "border-emerald-400 bg-emerald-100 text-emerald-950 ring-4 ring-emerald-400 shadow-lg shadow-emerald-500/30";
         }
 
         if (isReveal && showResults && isSelected && !isCorrect) {
-            return "border-red-500 bg-red-50 text-red-900 ring-2 ring-red-200";
+            return "border-red-500 bg-red-50 text-red-900 ring-4 ring-red-300 shadow-lg shadow-red-500/20";
         }
 
         if (isSelected) {
@@ -241,9 +241,9 @@ function LiveRoom() {
                         </div>
                     )}
 
-                    <div className="rounded-3xl border border-brand-200 bg-brand-50 p-5">
+                    <div className="room-code-card rounded-3xl border border-brand-200 bg-brand-50 p-5">
                         <p className="text-xs font-black uppercase tracking-[0.16em] text-brand-700">Код комнаты</p>
-                        <p className="mt-2 break-all text-5xl font-black tracking-[0.14em] text-brand-900">{room.code}</p>
+                        <p className="room-code-text mt-2 break-all text-5xl font-black tracking-[0.14em] text-brand-900">{room.code}</p>
                     </div>
 
                     <div className="grid gap-4 md:grid-cols-4">

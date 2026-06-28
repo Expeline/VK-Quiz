@@ -9,6 +9,7 @@ import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const clientDistPath = path.resolve(__dirname, "../../client/dist");
 
 app.use(
     cors({
@@ -28,6 +29,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.resolve(__dirname, "uploads")));
 
 app.use(routes);
+
+app.use(express.static(clientDistPath));
+app.get(/^(?!\/api|\/health|\/uploads|\/socket\.io).*/, (_request, response) => {
+    response.sendFile(path.join(clientDistPath, "index.html"));
+});
 
 app.use(notFoundHandler);
 app.use(errorHandler);

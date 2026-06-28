@@ -2,10 +2,17 @@ import Button from "../../components/ui/Button";
 import { ROLES } from "../../constants/roles";
 import { useAuth } from "../../hooks/useAuth";
 
+const leaderboard = [
+    { name: "Алина", avatar: "🧠", quizzes: 42, score: 9840, color: "bg-emerald-500" },
+    { name: "Марк", avatar: "🥝", quizzes: 37, score: 9160, color: "bg-lime-500" },
+    { name: "София", avatar: "🌵", quizzes: 31, score: 8720, color: "bg-teal-500" },
+    { name: "Илья", avatar: "🚀", quizzes: 28, score: 8010, color: "bg-green-600" },
+];
+
 const stages = [
-    { title: "Соберите квиз", text: "Вопросы, изображения, варианты и правила хранятся в одном конструкторе." },
-    { title: "Откройте комнату", text: "Участники заходят по коду, а организатор видит готовность аудитории." },
-    { title: "Проведите игру", text: "Таймер, ответы, баллы и лидерборд синхронизируются в реальном времени." },
+    { title: "Соберите раунд", text: "Добавьте вопросы, картинки, варианты и настройте показ правильных ответов." },
+    { title: "Запустите аудиторию", text: "Комната откроется по коду, а старт станет доступен после входа участников." },
+    { title: "Разберите итог", text: "Система покажет топ игроков, личное место и сохранит историю прохождения." },
 ];
 
 function Home() {
@@ -13,22 +20,19 @@ function Home() {
     const isOrganizer = user?.role === ROLES.ORGANIZER;
 
     return (
-        <div className="space-y-14">
-            <section className="grid min-h-[calc(100vh-9rem)] items-center gap-10 py-8 lg:grid-cols-[1fr_0.86fr]">
-                <div className="max-w-3xl">
-                    <p className="mb-5 inline-flex rounded-full border border-brand-100 bg-white px-4 py-2 text-sm font-semibold text-brand-700 shadow-sm">
-                        Платформа для live-квизов
-                    </p>
-
-                    <h1 className="text-5xl font-black leading-[1.05] tracking-normal text-slate-950 sm:text-6xl lg:text-7xl">
-                        VK Quiz
+        <div>
+            <section className="grid min-h-[calc(100vh-7rem)] items-center gap-5">
+                <div className="grid items-center gap-6 lg:grid-cols-[1fr_0.88fr]">
+                <div className="max-w-3xl animate-soft-rise">
+                    <h1 className="text-5xl font-black leading-[1.02] tracking-normal text-slate-950 sm:text-6xl lg:text-7xl">
+                        Green Quiz
                     </h1>
 
-                    <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600 sm:text-xl">
-                        Создавайте интерактивные квизы, запускайте комнаты с таймером и получайте честный рейтинг участников сразу после игры.
+                    <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
+                        Проводите квизы в реальном времени: участники входят по коду, отвечают на таймере, а результаты собираются в понятный лидерборд.
                     </p>
 
-                    <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                    <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                         {isAuthenticated ? (
                             isOrganizer ? (
                                 <>
@@ -43,29 +47,76 @@ function Home() {
                             )
                         ) : (
                             <>
-                                <Button to="/register" size="lg">Начать</Button>
+                                <Button to="/register" size="lg">Начать игру</Button>
                                 <Button to="/login" variant="secondary" size="lg">Войти</Button>
                             </>
                         )}
                     </div>
                 </div>
 
-                <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/70">
-                    <div className="grid gap-4">
-                        {stages.map((stage, index) => (
-                            <article key={stage.title} className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                                <div className="flex items-start gap-4">
-                                    <div className="grid size-11 shrink-0 place-items-center rounded-2xl bg-brand-600 text-lg font-black text-white">
-                                        {index + 1}
+                <div className="animate-soft-rise rounded-[2rem] border border-slate-200 bg-white p-4 shadow-2xl shadow-slate-200/70 [animation-delay:120ms]">
+                    <div className="rounded-[1.5rem] border border-brand-100 bg-brand-50 p-4">
+                        <div className="flex items-center justify-between gap-4">
+                            <div>
+                                <p className="text-sm font-black uppercase tracking-[0.16em] text-brand-700">Лидерборд недели</p>
+                                <h2 className="mt-1 text-xl font-black text-slate-950">Самые активные участники</h2>
+                            </div>
+                            <div className="rounded-full bg-white px-3 py-1 text-sm font-black text-brand-700 shadow-sm">
+                                Live
+                            </div>
+                        </div>
+
+                        <div className="mt-4 grid gap-2.5">
+                            {leaderboard.map((entry, index) => (
+                                <article
+                                    key={entry.name}
+                                    className="group rounded-3xl border border-slate-200 bg-white p-3.5 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lg"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-8 text-center text-lg font-black text-brand-700">{index + 1}</div>
+                                        <div className={`grid size-10 place-items-center rounded-full ${entry.color} text-xl font-black text-white shadow-lg shadow-brand-600/20`}>
+                                            {entry.avatar}
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                            <div className="flex items-center justify-between gap-3">
+                                                <h3 className="truncate font-black text-slate-950">{entry.name}</h3>
+                                                <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700">
+                                                    {entry.quizzes} квизов
+                                                </span>
+                                            </div>
+                                            <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-100">
+                                                <div
+                                                    className="h-full rounded-full bg-brand-600 transition-all duration-700 group-hover:bg-brand-500"
+                                                    style={{ width: `${Math.min(100, entry.quizzes * 2.2)}%` }}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-lg font-black text-slate-950">{entry.score}</p>
+                                            <p className="text-xs font-semibold text-slate-500">баллов</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h2 className="text-xl font-black text-slate-950">{stage.title}</h2>
-                                        <p className="mt-2 text-sm leading-6 text-slate-600">{stage.text}</p>
-                                    </div>
-                                </div>
-                            </article>
-                        ))}
+                                </article>
+                            ))}
+                        </div>
                     </div>
+                </div>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-3">
+                    {stages.map((stage, index) => (
+                        <article
+                            key={stage.title}
+                            className="animate-soft-rise rounded-3xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-xl"
+                            style={{ animationDelay: `${index * 90}ms` }}
+                        >
+                            <div className="grid size-10 place-items-center rounded-2xl bg-brand-600 text-base font-black text-white">
+                                {index + 1}
+                            </div>
+                            <h2 className="mt-3 text-lg font-black text-slate-950">{stage.title}</h2>
+                            <p className="mt-1.5 text-sm leading-6 text-slate-600">{stage.text}</p>
+                        </article>
+                    ))}
                 </div>
             </section>
         </div>

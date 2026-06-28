@@ -1,6 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 import Logo from "../ui/Logo";
 import Button from "../ui/Button";
+import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import { useAuth } from "../../hooks/useAuth";
 
 const guestNavigation = [{ label: "Главная", to: "/" }];
@@ -15,7 +16,7 @@ function Navbar() {
     const navigation = isAuthenticated ? userNavigation : guestNavigation;
 
     return (
-        <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/85 backdrop-blur-xl">
+        <header className="app-navbar relative sticky top-0 z-30 backdrop-blur-md">
             <nav className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
                 <Link to="/" className="shrink-0">
                     <Logo />
@@ -30,8 +31,8 @@ function Navbar() {
                                 [
                                     "rounded-full px-4 py-2 text-sm font-medium transition",
                                     isActive
-                                        ? "bg-white text-brand-700 shadow-sm"
-                                        : "text-slate-600 hover:text-slate-950",
+                                        ? "bg-brand-600 text-white shadow-sm"
+                                        : "text-slate-600 hover:bg-brand-100 hover:text-brand-800",
                                 ].join(" ")
                             }
                         >
@@ -41,6 +42,8 @@ function Navbar() {
                 </div>
 
                 <div className="flex items-center gap-2">
+                    <ThemeToggle />
+
                     {isAuthenticated ? (
                         <>
                             <div className="hidden items-center gap-3 sm:flex">
@@ -77,6 +80,7 @@ function Navbar() {
                     )}
                 </div>
             </nav>
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand-500/35 to-transparent" />
         </header>
     );
 }

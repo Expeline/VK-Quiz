@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 
 const variants = {
     primary: "bg-brand-600 text-white shadow-lg shadow-brand-600/20 hover:bg-brand-700",
-    secondary: "border border-slate-200 bg-white text-slate-900 shadow-sm hover:border-brand-200 hover:bg-brand-50",
-    ghost: "bg-transparent text-slate-700 hover:bg-slate-100 hover:text-slate-950",
+    secondary: "border border-slate-200 bg-white text-slate-900 shadow-sm hover:border-brand-500 hover:bg-brand-100 hover:text-brand-900",
+    ghost: "bg-transparent text-slate-700 hover:bg-brand-100 hover:text-brand-900",
 };
 
 const sizes = {
@@ -14,7 +14,7 @@ const sizes = {
 
 function Button({ children, to, type = "button", variant = "primary", size = "md", className = "", disabled = false, onClick }) {
     const classes = [
-        "inline-flex items-center justify-center rounded-full font-semibold transition focus:outline-none focus:ring-4 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:opacity-60",
+        "inline-flex items-center justify-center rounded-full font-semibold transition duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0",
         variants[variant],
         sizes[size],
         className,

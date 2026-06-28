@@ -7,7 +7,7 @@ function AuthCard({ title, subtitle, submitLabel, footerText, footerLinkLabel, f
             <div className="hidden lg:block">
                 <div className="max-w-lg">
                     <p className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-brand-600">
-                        VK Quiz
+                        Green Quiz
                     </p>
                     <h1 className="text-4xl font-black leading-tight text-slate-950">
                         Единый вход для организаторов и участников квиза.

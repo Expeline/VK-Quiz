@@ -90,7 +90,7 @@ function OrganizerQuizzes() {
     return (
         <DashboardPanel
             title="Мои квизы"
-            subtitle="Управляйте черновиками и готовыми квизами организатора."
+            subtitle="Управляйте черновиками и готовыми квизами."
             action={<Button to="/dashboard/organizer/create" size="sm">Создать квиз</Button>}
         >
             {error && (
@@ -138,7 +138,7 @@ function OrganizerQuizzes() {
                                     onClick={() => handleCreateRoom(quiz.id)}
                                     disabled={creatingRoomId === quiz.id}
                                 >
-                                    {creatingRoomId === quiz.id ? "Создание..." : "Создать комнату"}
+                                    {creatingRoomId === quiz.id ? "Создание..." : "Комната"}
                                 </Button>
                                 <Button to={`/dashboard/organizer/quizzes/${quiz.id}/edit`} variant="secondary" size="sm">
                                     Редактировать

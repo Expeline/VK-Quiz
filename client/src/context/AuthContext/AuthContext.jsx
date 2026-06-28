@@ -1,13 +1,9 @@
 import { useCallback, useMemo, useState } from "react";
 import { tokenStorage } from "../../api/apiClient";
-import { ROLES } from "../../constants/roles";
+import { loginUser, registerUser, updateCurrentUser } from "../../api/authApi";
 import { AuthContext } from "./authContext";
 
 const USER_STORAGE_KEY = "vk_quiz_user";
-
-function createMockToken(email) {
-    return `mock-jwt-${btoa(email)}-${Date.now()}`;
-}
 
 function readStoredUser() {
     const storedUser = localStorage.getItem(USER_STORAGE_KEY);
@@ -36,27 +32,15 @@ export function AuthProvider({ children }) {
         setToken(nextToken);
     }, []);
 
-    const login = useCallback(async ({ email, password }) => {
-        const nextUser = {
-            id: crypto.randomUUID(),
-            name: email.split("@")[0],
-            email,
-            role: ROLES.ORGANIZER,
-        };
-        const nextToken = createMockToken(`${email}:${password}`);
+    const login = useCallback(async (credentials) => {
+        const { user: nextUser, token: nextToken } = await loginUser(credentials);
 
         saveSession(nextUser, nextToken);
         return nextUser;
     }, [saveSession]);
 
-    const register = useCallback(async ({ name, email, password, role }) => {
-        const nextUser = {
-            id: crypto.randomUUID(),
-            name,
-            email,
-            role,
-        };
-        const nextToken = createMockToken(`${email}:${password}`);
+    const register = useCallback(async (payload) => {
+        const { user: nextUser, token: nextToken } = await registerUser(payload);
 
         saveSession(nextUser, nextToken);
         return nextUser;
@@ -69,6 +53,13 @@ export function AuthProvider({ children }) {
         setToken(null);
     }, []);
 
+    const updateProfile = useCallback(async (payload) => {
+        const nextUser = await updateCurrentUser(payload);
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(nextUser));
+        setUser(nextUser);
+        return nextUser;
+    }, []);
+
     const value = useMemo(
         () => ({
             user,
@@ -77,8 +68,9 @@ export function AuthProvider({ children }) {
             login,
             logout,
             register,
+            updateProfile,
         }),
-        [user, token, login, logout, register],
+        [user, token, login, logout, register, updateProfile],
     );
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

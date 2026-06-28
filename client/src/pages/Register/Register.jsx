@@ -27,6 +27,10 @@ function validateForm(form) {
     return "";
 }
 
+function getErrorMessage(error) {
+    return error?.response?.data?.message ?? "Не удалось создать аккаунт. Проверьте доступность сервера и базы данных.";
+}
+
 function Register() {
     const [form, setForm] = useState(initialForm);
     const [error, setError] = useState("");
@@ -59,8 +63,8 @@ function Register() {
         try {
             await register(form);
             navigate("/dashboard", { replace: true });
-        } catch {
-            setError("Не удалось создать аккаунт. Попробуйте еще раз.");
+        } catch (submitError) {
+            setError(getErrorMessage(submitError));
         } finally {
             setIsSubmitting(false);
         }

@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { ROLES } from "../../constants/roles";
 
 const organizerLinks = [
     { label: "Мои квизы", to: "/dashboard/organizer/quizzes" },
@@ -10,6 +11,9 @@ const organizerLinks = [
 const participantLinks = [
     { label: "Присоединиться", to: "/dashboard/participant/join" },
     { label: "История игр", to: "/dashboard/participant/history" },
+];
+
+const accountLinks = [
     { label: "Профиль", to: "/dashboard/profile" },
 ];
 
@@ -33,6 +37,8 @@ function DashboardLink({ to, label }) {
 
 function Dashboard() {
     const { user } = useAuth();
+    const isOrganizer = user.role === ROLES.ORGANIZER;
+    const links = isOrganizer ? organizerLinks : participantLinks;
 
     return (
         <section className="grid gap-6 lg:grid-cols-[18rem_1fr]">
@@ -46,18 +52,18 @@ function Dashboard() {
                 <div className="mt-5 space-y-6">
                     <nav className="grid gap-2">
                         <p className="px-2 text-xs font-black uppercase tracking-[0.16em] text-slate-400">
-                            Организатор
+                            {isOrganizer ? "Организатор" : "Участник"}
                         </p>
-                        {organizerLinks.map((link) => (
+                        {links.map((link) => (
                             <DashboardLink key={link.to} {...link} />
                         ))}
                     </nav>
 
                     <nav className="grid gap-2">
                         <p className="px-2 text-xs font-black uppercase tracking-[0.16em] text-slate-400">
-                            Участник
+                            Аккаунт
                         </p>
-                        {participantLinks.map((link) => (
+                        {accountLinks.map((link) => (
                             <DashboardLink key={link.to} {...link} />
                         ))}
                     </nav>

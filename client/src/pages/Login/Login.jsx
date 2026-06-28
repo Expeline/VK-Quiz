@@ -24,6 +24,10 @@ function validateForm(form) {
     return "";
 }
 
+function getErrorMessage(error) {
+    return error?.response?.data?.message ?? "Не удалось выполнить вход. Проверьте доступность сервера и базы данных.";
+}
+
 function Login() {
     const [form, setForm] = useState(initialForm);
     const [error, setError] = useState("");
@@ -58,8 +62,8 @@ function Login() {
         try {
             await login(form);
             navigate(redirectTo, { replace: true });
-        } catch {
-            setError("Не удалось выполнить вход. Попробуйте еще раз.");
+        } catch (submitError) {
+            setError(getErrorMessage(submitError));
         } finally {
             setIsSubmitting(false);
         }

@@ -1,4 +1,4 @@
 export const ROLES = {
-    ORGANIZER: "organizer",
-    PARTICIPANT: "participant",
+    ORGANIZER: "ORGANIZER",
+    PARTICIPANT: "PARTICIPANT",
 };

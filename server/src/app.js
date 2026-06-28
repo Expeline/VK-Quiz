@@ -11,7 +11,7 @@ const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // const clientDistPath = path.resolve(__dirname, "../../client/dist");
 
-app.use(
+/*app.use(
     cors({
         origin(origin, callback) {
             if (!origin || env.allowedClientOrigins.includes(origin)) {
@@ -23,7 +23,13 @@ app.use(
         },
         credentials: true,
     }),
-);
+);*/
+
+app.use(cors({
+    origin: true,
+    credentials: true,
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.resolve(__dirname, "uploads")));

@@ -3,7 +3,7 @@ import Button from "../ui/Button";
 
 function AuthCard({ title, subtitle, submitLabel, footerText, footerLinkLabel, footerLinkTo, onSubmit, isSubmitting, error, children }) {
     return (
-        <section className="mx-auto grid min-h-[calc(100vh-9rem)] w-full max-w-6xl items-center gap-10 lg:grid-cols-[0.95fr_1.05fr]">
+        <section className="mx-auto grid min-h-[calc(100svh-9rem)] w-full max-w-6xl items-center gap-6 py-2 sm:min-h-[calc(100vh-9rem)] lg:grid-cols-[0.95fr_1.05fr] lg:gap-10">
             <div className="hidden lg:block">
                 <div className="max-w-lg">
                     <p className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-brand-600">
@@ -18,9 +18,9 @@ function AuthCard({ title, subtitle, submitLabel, footerText, footerLinkLabel, f
                 </div>
             </div>
 
-            <div className="mx-auto w-full max-w-md rounded-[2rem] border border-slate-200 bg-white p-6 shadow-2xl shadow-slate-200/70 sm:p-8">
-                <div className="mb-8">
-                    <h1 className="text-3xl font-black text-slate-950">{title}</h1>
+            <div className="mx-auto w-full max-w-md rounded-3xl border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-200/70 sm:rounded-[2rem] sm:p-8">
+                <div className="mb-6 sm:mb-8">
+                    <h1 className="text-2xl font-black text-slate-950 sm:text-3xl">{title}</h1>
                     <p className="mt-3 text-sm leading-6 text-slate-500">{subtitle}</p>
                 </div>
 

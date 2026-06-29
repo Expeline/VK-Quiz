@@ -17,12 +17,12 @@ function Navbar() {
 
     return (
         <header className="app-navbar relative sticky top-0 z-30 backdrop-blur-md">
-            <nav className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-                <Link to="/" className="shrink-0">
+            <nav className="mx-auto box-border flex min-h-16 w-screen max-w-screen items-center justify-between gap-2 px-3 py-2 sm:gap-4 sm:px-6 lg:px-8 xl:max-w-7xl">
+                <Link to="/" className="min-w-0 shrink-0">
                     <Logo />
                 </Link>
 
-                <div className="hidden items-center gap-1 rounded-full border border-slate-200 bg-slate-50 p-1 md:flex">
+                <div className="desktop-nav-pill items-center gap-1 rounded-full border border-slate-200 bg-slate-50 p-1 md:flex">
                     {navigation.map((item) => (
                         <NavLink
                             key={item.to}
@@ -41,7 +41,7 @@ function Navbar() {
                     ))}
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
                     <ThemeToggle />
 
                     {isAuthenticated ? (
@@ -66,21 +66,42 @@ function Navbar() {
                         </>
                     ) : (
                         <>
-                            <Button
-                                to="/login"
-                                className="hidden rounded-full px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 sm:inline-flex"
-                                size="sm"
-                            >
-                                Войти
-                            </Button>
+                            <span className="hidden sm:inline-flex">
+                                <Button
+                                    to="/login"
+                                    className="rounded-full px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950"
+                                    size="sm"
+                                >
+                                    Войти
+                                </Button>
+                            </span>
 
                             <Button to="/register" size="sm">
-                                Регистрация
+                                <span className="sm:hidden">Старт</span>
+                                <span className="hidden sm:inline">Регистрация</span>
                             </Button>
                         </>
                     )}
                 </div>
             </nav>
+            <div className="mx-auto box-border flex w-screen max-w-screen gap-2 overflow-x-auto px-3 pb-2 md:hidden xl:max-w-7xl">
+                {navigation.map((item) => (
+                    <NavLink
+                        key={item.to}
+                        to={item.to}
+                        className={({ isActive }) =>
+                            [
+                                "shrink-0 rounded-full px-4 py-2 text-sm font-bold transition",
+                                isActive
+                                    ? "bg-brand-600 text-white shadow-sm"
+                                    : "border border-slate-200 bg-white/85 text-slate-700 hover:bg-brand-50 hover:text-brand-800",
+                            ].join(" ")
+                        }
+                    >
+                        {item.label}
+                    </NavLink>
+                ))}
+            </div>
             <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand-500/35 to-transparent" />
         </header>
     );

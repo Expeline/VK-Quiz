@@ -21,14 +21,14 @@ function Home() {
 
     return (
         <div>
-            <section className="grid min-h-[calc(100vh-7rem)] items-center gap-5">
-                <div className="grid items-center gap-6 lg:grid-cols-[1fr_0.88fr]">
-                <div className="max-w-3xl animate-soft-rise">
-                    <h1 className="text-5xl font-black leading-[1.02] tracking-normal text-slate-950 sm:text-6xl lg:text-7xl">
+            <section className="grid min-h-[calc(100svh-7rem)] min-w-0 items-center gap-5 overflow-hidden sm:min-h-[calc(100vh-7rem)]">
+                <div className="grid min-w-0 max-w-full items-center gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.88fr)] lg:gap-6">
+                <div className="min-w-0 max-w-3xl animate-soft-rise">
+                    <h1 className="text-4xl font-black leading-[1.04] tracking-normal text-slate-950 min-[380px]:text-5xl sm:text-6xl lg:text-7xl">
                         Green Quiz
                     </h1>
 
-                    <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
+                    <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-600 sm:text-lg sm:leading-7">
                         Проводите квизы в реальном времени: участники входят по коду, отвечают на таймере, а результаты собираются в понятный лидерборд.
                     </p>
 
@@ -54,14 +54,14 @@ function Home() {
                     </div>
                 </div>
 
-                <div className="animate-soft-rise rounded-[2rem] border border-slate-200 bg-white p-4 shadow-2xl shadow-slate-200/70 [animation-delay:120ms]">
-                    <div className="rounded-[1.5rem] border border-brand-100 bg-brand-50 p-4">
-                        <div className="flex items-center justify-between gap-4">
+                <div className="min-w-0 animate-soft-rise rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-200/70 [animation-delay:120ms] sm:rounded-[2rem] sm:p-4">
+                    <div className="rounded-3xl border border-brand-100 bg-brand-50 p-3 sm:rounded-[1.5rem] sm:p-4">
+                        <div className="flex items-start justify-between gap-3 sm:items-center sm:gap-4">
                             <div>
-                                <p className="text-sm font-black uppercase tracking-[0.16em] text-brand-700">Лидерборд недели</p>
-                                <h2 className="mt-1 text-xl font-black text-slate-950">Самые активные участники</h2>
+                                <p className="text-xs font-black uppercase tracking-[0.14em] text-brand-700 sm:text-sm sm:tracking-[0.16em]">Лидерборд недели</p>
+                                <h2 className="mt-1 text-lg font-black text-slate-950 sm:text-xl">Самые активные участники</h2>
                             </div>
-                            <div className="rounded-full bg-white px-3 py-1 text-sm font-black text-brand-700 shadow-sm">
+                            <div className="rounded-full bg-white px-3 py-1 text-xs font-black text-brand-700 shadow-sm sm:text-sm">
                                 Live
                             </div>
                         </div>
@@ -70,17 +70,17 @@ function Home() {
                             {leaderboard.map((entry, index) => (
                                 <article
                                     key={entry.name}
-                                    className="group rounded-3xl border border-slate-200 bg-white p-3.5 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lg"
+                                    className="group rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lg sm:rounded-3xl sm:p-3.5"
                                 >
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-8 text-center text-lg font-black text-brand-700">{index + 1}</div>
-                                        <div className={`grid size-10 place-items-center rounded-full ${entry.color} text-xl font-black text-white shadow-lg shadow-brand-600/20`}>
+                                    <div className="flex items-center gap-3 sm:gap-4">
+                                        <div className="w-5 text-center text-base font-black text-brand-700 sm:w-8 sm:text-lg">{index + 1}</div>
+                                        <div className={`grid size-9 shrink-0 place-items-center rounded-full ${entry.color} text-lg font-black text-white shadow-lg shadow-brand-600/20 sm:size-10 sm:text-xl`}>
                                             {entry.avatar}
                                         </div>
                                         <div className="min-w-0 flex-1">
                                             <div className="flex items-center justify-between gap-3">
                                                 <h3 className="truncate font-black text-slate-950">{entry.name}</h3>
-                                                <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700">
+                                                <span className="hidden shrink-0 rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700 min-[420px]:inline">
                                                     {entry.quizzes} квизов
                                                 </span>
                                             </div>
@@ -91,8 +91,8 @@ function Home() {
                                                 />
                                             </div>
                                         </div>
-                                        <div className="text-right">
-                                            <p className="text-lg font-black text-slate-950">{entry.score}</p>
+                                        <div className="shrink-0 text-right">
+                                            <p className="text-base font-black text-slate-950 sm:text-lg">{entry.score}</p>
                                             <p className="text-xs font-semibold text-slate-500">баллов</p>
                                         </div>
                                     </div>
@@ -103,11 +103,11 @@ function Home() {
                 </div>
                 </div>
 
-                <div className="grid gap-3 sm:grid-cols-3">
+                <div className="grid min-w-0 gap-3 sm:grid-cols-3">
                     {stages.map((stage, index) => (
                         <article
                             key={stage.title}
-                            className="animate-soft-rise rounded-3xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-xl"
+                            className="animate-soft-rise rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-xl sm:rounded-3xl"
                             style={{ animationDelay: `${index * 90}ms` }}
                         >
                             <div className="grid size-10 place-items-center rounded-2xl bg-brand-600 text-base font-black text-white">

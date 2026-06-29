@@ -132,14 +132,14 @@ function ImageInput({ label, value, onChange }) {
             onDrop={handleDrop}
         >
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div>
+                <div className="min-w-0">
                     <span className="block text-sm font-semibold text-slate-700">{label}</span>
                     <span className="mt-1 block text-xs font-medium text-slate-500">
                         Выберите файл, перетащите картинку или вставьте из буфера. Файл сохранится на сервере.
                     </span>
                 </div>
-                <div className="flex gap-2">
-                    <label className="inline-flex h-10 cursor-pointer items-center justify-center rounded-full border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-900 shadow-sm transition hover:border-brand-200 hover:bg-brand-50">
+                <div className="flex flex-col gap-2 min-[420px]:flex-row sm:shrink-0">
+                    <label className="inline-flex min-h-10 cursor-pointer items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm transition hover:border-brand-200 hover:bg-brand-50">
                         {isUploading ? "Загрузка..." : "Выбрать"}
                         <input
                             type="file"
@@ -320,7 +320,7 @@ function QuizBuilder({ initialQuiz, onSubmit, submitLabel }) {
     };
 
     return (
-        <form className="grid gap-6" onSubmit={handleSubmit}>
+        <form className="grid gap-5 sm:gap-6" onSubmit={handleSubmit}>
             {error && (
                 <div className="rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
                     {error}
@@ -403,7 +403,7 @@ function QuizBuilder({ initialQuiz, onSubmit, submitLabel }) {
             </label>
 
             <div className="flex flex-col gap-3 border-y border-slate-100 py-5 sm:flex-row sm:items-center sm:justify-between">
-                <div>
+                <div className="min-w-0">
                     <h3 className="text-xl font-black text-slate-950">Вопросы</h3>
                     <p className="mt-1 text-sm text-slate-500">
                         {questionCount} вопросов, {optionCount} вариантов
@@ -416,7 +416,7 @@ function QuizBuilder({ initialQuiz, onSubmit, submitLabel }) {
 
             <div className="grid gap-5">
                 {form.questions.map((question, questionIndex) => (
-                    <article key={question.clientId} className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                    <article key={question.clientId} className="rounded-3xl border border-slate-200 bg-slate-50 p-3 sm:p-5">
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                             <h4 className="text-lg font-black text-slate-950">Вопрос {questionIndex + 1}</h4>
                             <Button
@@ -465,9 +465,9 @@ function QuizBuilder({ initialQuiz, onSubmit, submitLabel }) {
                                 {question.options.map((option, optionIndex) => (
                                     <div
                                         key={option.clientId}
-                                        className="grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 lg:grid-cols-[2rem_1fr_auto]"
+                                        className="grid gap-3 rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 lg:grid-cols-[2rem_1fr_auto]"
                                     >
-                                        <label className="flex h-12 items-center justify-center">
+                                        <label className="flex min-h-12 items-center gap-3 lg:justify-center">
                                             <input
                                                 type={question.type === "SINGLE_CHOICE" ? "radio" : "checkbox"}
                                                 name={`question-${question.clientId}`}
@@ -475,6 +475,9 @@ function QuizBuilder({ initialQuiz, onSubmit, submitLabel }) {
                                                 onChange={() => toggleCorrectOption(questionIndex, optionIndex)}
                                                 className="h-4 w-4 accent-brand-600"
                                             />
+                                            <span className="text-sm font-semibold text-slate-500 lg:hidden">
+                                                Правильный
+                                            </span>
                                         </label>
 
                                         <input
@@ -509,7 +512,7 @@ function QuizBuilder({ initialQuiz, onSubmit, submitLabel }) {
                                 ))}
                             </div>
 
-                            <Button type="button" variant="secondary" size="sm" className="w-fit" onClick={() => addOption(questionIndex)}>
+                            <Button type="button" variant="secondary" size="sm" className="w-full sm:w-fit" onClick={() => addOption(questionIndex)}>
                                 Добавить вариант
                             </Button>
                         </div>

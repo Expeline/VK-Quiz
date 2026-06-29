@@ -62,20 +62,20 @@ function OrganizerHistory() {
             ) : (
                 <div className="grid gap-4">
                     {rooms.map((room) => (
-                        <article key={room.id} className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                        <article key={room.id} className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
                             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                                <div>
-                                    <h3 className="text-xl font-black text-slate-950">{room.quiz.title}</h3>
+                                <div className="min-w-0">
+                                    <h3 className="break-words text-lg font-black text-slate-950 sm:text-xl">{room.quiz.title}</h3>
                                     <p className="mt-1 text-sm text-slate-500">
                                         Код {room.code}, участников: {room.participants.length}
                                     </p>
                                 </div>
-                                <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-brand-700 shadow-sm">
+                                <span className="w-fit shrink-0 rounded-full bg-white px-3 py-1 text-xs font-bold text-brand-700 shadow-sm">
                                     {room.endedAt ? new Date(room.endedAt).toLocaleDateString("ru-RU") : "Завершен"}
                                 </span>
                             </div>
-                            <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white">
-                                <table className="w-full text-left text-sm">
+                            <div className="mt-4 overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+                                <table className="w-full min-w-[28rem] text-left text-sm">
                                     <thead className="bg-slate-100 text-xs font-black uppercase text-slate-500">
                                         <tr>
                                             <th className="px-4 py-3">Место</th>

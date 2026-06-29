@@ -7,14 +7,14 @@ const variants = {
 };
 
 const sizes = {
-    sm: "h-10 px-4 text-sm",
-    md: "h-12 px-6 text-base",
-    lg: "h-14 px-7 text-base",
+    sm: "min-h-10 px-4 py-2 text-sm",
+    md: "min-h-12 px-5 py-2.5 text-base sm:px-6",
+    lg: "min-h-12 px-5 py-3 text-base sm:min-h-14 sm:px-7",
 };
 
 function Button({ children, to, type = "button", variant = "primary", size = "md", className = "", disabled = false, onClick }) {
     const classes = [
-        "inline-flex items-center justify-center rounded-full font-semibold transition duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0",
+        "inline-flex min-w-0 items-center justify-center rounded-full text-center font-semibold leading-tight transition duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0",
         variants[variant],
         sizes[size],
         className,

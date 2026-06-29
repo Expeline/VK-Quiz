@@ -234,19 +234,19 @@ function LiveRoom() {
                                     room.quiz.organizer.name.slice(0, 1).toUpperCase()
                                 )}
                             </div>
-                            <div>
+                            <div className="min-w-0">
                                 <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">Организатор</p>
-                                <p className="font-black text-slate-950">{room.quiz.organizer.name}</p>
+                                <p className="truncate font-black text-slate-950">{room.quiz.organizer.name}</p>
                             </div>
                         </div>
                     )}
 
-                    <div className="room-code-card rounded-3xl border border-brand-200 bg-brand-50 p-5">
+                    <div className="room-code-card rounded-3xl border border-brand-200 bg-brand-50 p-4 sm:p-5">
                         <p className="text-xs font-black uppercase tracking-[0.16em] text-brand-700">Код комнаты</p>
-                        <p className="room-code-text mt-2 break-all text-5xl font-black tracking-[0.14em] text-brand-900">{room.code}</p>
+                        <p className="room-code-text mt-2 break-all text-3xl font-black tracking-[0.1em] text-brand-900 min-[380px]:text-4xl sm:text-5xl sm:tracking-[0.14em]">{room.code}</p>
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-4">
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
                         <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
                             <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">Статус</p>
                             <p className="mt-2 text-xl font-black text-slate-950">{statusLabels[room.status]}</p>
@@ -275,7 +275,7 @@ function LiveRoom() {
                     </div>
 
                     {isOrganizer && (
-                        <div className="flex flex-wrap gap-3">
+                        <div className="grid gap-3 sm:flex sm:flex-wrap">
                             <Button
                                 type="button"
                                 onClick={() => emitOrganizerAction("quiz:start")}
@@ -303,7 +303,7 @@ function LiveRoom() {
                     )}
 
                     {room.status === "WAITING" && (
-                        <div className="rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
+                        <div className="rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-5 text-center sm:p-8">
                             <h3 className="text-xl font-black text-slate-950">Ожидание участников</h3>
                             <p className="mt-2 text-sm text-slate-500">
                                 Передайте участникам код выше. Квиз можно начать, когда в комнату войдет хотя бы один участник.
@@ -312,15 +312,15 @@ function LiveRoom() {
                     )}
 
                     {room.status === "ACTIVE" && currentQuestion && (
-                        <article className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                        <article className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
                             <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                                <div>
+                                <div className="min-w-0">
                                     <p className="text-xs font-black uppercase tracking-[0.16em] text-brand-600">
                                         {currentQuestion.type === "SINGLE_CHOICE" ? "Один ответ" : "Несколько ответов"}
                                     </p>
-                                    <h3 className="mt-2 text-2xl font-black text-slate-950">{currentQuestion.text}</h3>
+                                    <h3 className="mt-2 break-words text-xl font-black text-slate-950 sm:text-2xl">{currentQuestion.text}</h3>
                                 </div>
-                                <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-slate-600 shadow-sm">
+                                <span className="w-fit shrink-0 rounded-full bg-white px-3 py-1 text-xs font-bold text-slate-600 shadow-sm">
                                     {room.quiz.timeLimit} сек.
                                 </span>
                             </div>
@@ -344,11 +344,11 @@ function LiveRoom() {
                                             onClick={() => toggleOption(option.id)}
                                             disabled={isOrganizer || Boolean(answerResult) || room.phase !== "QUESTION"}
                                             className={[
-                                                "rounded-2xl border p-4 text-left font-semibold transition",
+                                                "min-h-14 rounded-2xl border p-4 text-left font-semibold transition",
                                                 getOptionClassName(option.id),
                                             ].join(" ")}
                                         >
-                                            {option.text || "Изображение"}
+                                            <span className="break-words">{option.text || "Изображение"}</span>
                                             {option.imageUrl && (
                                                 <div className="mt-3 flex justify-center rounded-xl bg-slate-100 p-2">
                                                     <img
@@ -373,7 +373,7 @@ function LiveRoom() {
                                                     ? "bg-emerald-50 text-emerald-800"
                                                     : "bg-red-50 text-red-800"
                                                 : "bg-slate-100 text-slate-700",
-                                        ].join(" ")}>
+                                            ].join(" ")}>
                                             {showResults
                                                 ? `Ответ принят: ${answerResult.isCorrect ? "верно" : "неверно"}, +${answerResult.score}`
                                                 : "Ответ принят"}
@@ -400,7 +400,7 @@ function LiveRoom() {
                     )}
 
                     {room.status === "FINISHED" && (
-                        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
                             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                 <h3 className="text-xl font-black text-slate-950">Лидерборд</h3>
                                 <Button type="button" variant="secondary" size="sm" onClick={() => navigate("/dashboard")}>
@@ -410,9 +410,9 @@ function LiveRoom() {
                             {showResults ? (
                                 <div className="mt-5 grid gap-3">
                                     {room.leaderboard.map((entry) => (
-                                        <div key={entry.participantId} className="flex items-center justify-between rounded-2xl bg-white px-4 py-3">
-                                            <div>
-                                                <p className="font-black text-slate-950">
+                                        <div key={entry.participantId} className="flex items-center justify-between gap-3 rounded-2xl bg-white px-4 py-3">
+                                            <div className="min-w-0">
+                                                <p className="truncate font-black text-slate-950">
                                                     {entry.place}. {entry.displayName}
                                                 </p>
                                                 <p className="text-xs font-semibold text-slate-500">{entry.answersCount} ответов</p>
@@ -429,12 +429,12 @@ function LiveRoom() {
                         </div>
                     )}
 
-                    <div className="rounded-3xl border border-slate-200 bg-white p-5">
+                    <div className="rounded-3xl border border-slate-200 bg-white p-4 sm:p-5">
                         <h3 className="text-lg font-black text-slate-950">Участники</h3>
                         <div className="mt-4 grid gap-3 md:grid-cols-2">
                             {room.participants.map((participant) => (
-                                <div key={participant.id} className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
-                                    <span className="font-bold text-slate-800">{participant.displayName}</span>
+                                <div key={participant.id} className="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 px-4 py-3">
+                                    <span className="min-w-0 truncate font-bold text-slate-800">{participant.displayName}</span>
                                     {(showResults || isOrganizer) && (
                                         <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-black text-brand-700">
                                             {participant.score}

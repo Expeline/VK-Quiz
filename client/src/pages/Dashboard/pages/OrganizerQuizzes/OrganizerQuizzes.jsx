@@ -114,15 +114,15 @@ function OrganizerQuizzes() {
             ) : (
                 <div className="grid gap-4 md:grid-cols-2">
                     {quizzes.map((quiz) => (
-                        <article key={quiz.id} className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                            <div className="flex items-start justify-between gap-4">
-                                <div>
-                                    <h3 className="text-xl font-black text-slate-950">{quiz.title}</h3>
+                        <article key={quiz.id} className="rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
+                            <div className="flex flex-col items-start justify-between gap-3 min-[420px]:flex-row min-[420px]:gap-4">
+                                <div className="min-w-0">
+                                    <h3 className="break-words text-lg font-black text-slate-950 sm:text-xl">{quiz.title}</h3>
                                     <p className="mt-2 text-sm text-slate-500">
                                         {quiz._count?.questions ?? 0} вопросов
                                     </p>
                                 </div>
-                                <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-brand-700 shadow-sm">
+                                <span className="w-fit shrink-0 rounded-full bg-white px-3 py-1 text-xs font-bold text-brand-700 shadow-sm">
                                     {statusLabels[quiz.status] ?? quiz.status}
                                 </span>
                             </div>
@@ -131,7 +131,7 @@ function OrganizerQuizzes() {
                                 <p className="mt-4 line-clamp-2 text-sm leading-6 text-slate-600">{quiz.description}</p>
                             )}
 
-                            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                                 <Button
                                     type="button"
                                     size="sm"

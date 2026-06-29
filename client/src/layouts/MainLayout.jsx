@@ -13,8 +13,8 @@ function MainLayout({ children }) {
 
             <main
                 className={[
-                    "relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8",
-                    isHome ? "pb-5 pt-5" : "pb-16 pt-8",
+                    "relative mx-auto box-border w-screen max-w-screen px-3 sm:px-6 lg:px-8 xl:max-w-7xl",
+                    isHome ? "pb-5 pt-4 sm:pt-5" : "pb-10 pt-5 sm:pb-16 sm:pt-8",
                 ].join(" ")}
             >
                 {children}

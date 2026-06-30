@@ -57,6 +57,26 @@ function LiveRoom() {
     const hasAnswered = useMemo(() => {
         return Boolean(currentAnswer);
     }, [currentAnswer]);
+    const organizerAnswerRows = useMemo(() => {
+        if (!currentQuestion || !room?.participants) {
+            return [];
+        }
+
+        return room.participants.map((participant) => {
+            const answer = participant.answers?.find((entry) => entry.questionId === currentQuestion.id);
+            const selectedOptions = answer?.selectedOptionIds
+                ?.map((optionId) => currentQuestion.options.find((option) => option.id === optionId))
+                .filter(Boolean) ?? [];
+
+            return {
+                participant,
+                answer,
+                selectedText: selectedOptions.length
+                    ? selectedOptions.map((option) => option.text || "Изображение").join(", ")
+                    : "Ждет ответа",
+            };
+        });
+    }, [currentQuestion, room]);
 
     useEffect(() => {
         let isMounted = true;
@@ -362,6 +382,60 @@ function LiveRoom() {
                                     );
                                 })}
                             </div>
+
+                            {isOrganizer && (
+                                <div className="mt-5 rounded-3xl border border-slate-200 bg-white p-4">
+                                    <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+                                        <div>
+                                            <p className="text-xs font-black uppercase tracking-[0.16em] text-brand-600">
+                                                Ответы участников
+                                            </p>
+                                            <h4 className="mt-1 text-lg font-black text-slate-950">
+                                                Кто что выбрал и за сколько
+                                            </h4>
+                                        </div>
+                                        <span className="text-sm font-bold text-slate-500">
+                                            {organizerAnswerRows.filter((row) => row.answer).length}/{organizerAnswerRows.length}
+                                        </span>
+                                    </div>
+
+                                    <div className="mt-4 grid gap-2">
+                                        {organizerAnswerRows.map(({ participant, answer, selectedText }) => (
+                                            <div
+                                                key={participant.id}
+                                                className={[
+                                                    "grid gap-2 rounded-2xl border px-4 py-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)_auto]",
+                                                    answer ? "border-brand-200 bg-brand-50" : "border-slate-200 bg-slate-50",
+                                                ].join(" ")}
+                                            >
+                                                <div className="min-w-0">
+                                                    <p className="truncate font-black text-slate-950">{participant.displayName}</p>
+                                                    <p className="text-xs font-semibold text-slate-500">{participant.score} баллов</p>
+                                                </div>
+                                                <p className="min-w-0 break-words text-sm font-semibold text-slate-700">
+                                                    {selectedText}
+                                                </p>
+                                                <div className="text-left sm:text-right">
+                                                    {answer ? (
+                                                        <>
+                                                            <p className="text-sm font-black text-brand-700">
+                                                                {(answer.responseTimeMs / 1000).toFixed(1)} c
+                                                            </p>
+                                                            <p className="text-xs font-semibold text-slate-500">
+                                                                +{answer.score}
+                                                            </p>
+                                                        </>
+                                                    ) : (
+                                                        <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-slate-500">
+                                                            ожидание
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
                             {!isOrganizer && (
                                 <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

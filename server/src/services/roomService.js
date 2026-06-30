@@ -75,20 +75,46 @@ function sanitizeQuestion(question, includeCorrectAnswers = false) {
     };
 }
 
+function getParticipantAccuracy(participant) {
+    const answers = participant.answers ?? [];
+    const hasStoredAccuracy = (participant.answeredQuestionsCount ?? 0) > 0 || answers.length === 0;
+    const answeredQuestionsCount = hasStoredAccuracy
+        ? participant.answeredQuestionsCount ?? answers.length
+        : answers.length;
+    const correctAnswersCount = hasStoredAccuracy
+        ? participant.correctAnswersCount ?? answers.filter((answer) => answer.isCorrect).length
+        : answers.filter((answer) => answer.isCorrect).length;
+    const accuracyPercent = hasStoredAccuracy && participant.accuracyPercent !== undefined && participant.accuracyPercent !== null
+        ? participant.accuracyPercent
+        : (answeredQuestionsCount ? Math.round((correctAnswersCount / answeredQuestionsCount) * 100) : 0);
+
+    return {
+        answeredQuestionsCount,
+        correctAnswersCount,
+        accuracyPercent,
+    };
+}
+
 function sanitizeParticipant(participant) {
+    const { answeredQuestionsCount, correctAnswersCount, accuracyPercent } = getParticipantAccuracy(participant);
+
     return {
         id: participant.id,
         userId: participant.userId,
         displayName: participant.displayName,
         score: participant.score,
         joinedAt: participant.joinedAt,
-        answersCount: participant.answers?.length ?? 0,
+        answersCount: answeredQuestionsCount,
+        correctAnswersCount,
+        accuracyPercent,
         answeredQuestionIds: participant.answers?.map((answer) => answer.questionId) ?? [],
         answers: participant.answers?.map((answer) => ({
             questionId: answer.questionId,
             selectedOptionIds: answer.selectedOptionIds,
             isCorrect: answer.isCorrect,
             score: answer.score,
+            responseTimeMs: answer.responseTimeMs,
+            answeredAt: answer.answeredAt,
         })) ?? [],
     };
 }
@@ -96,14 +122,20 @@ function sanitizeParticipant(participant) {
 export function buildLeaderboard(participants) {
     return [...participants]
         .sort((first, second) => second.score - first.score || new Date(first.joinedAt) - new Date(second.joinedAt))
-        .map((participant, index) => ({
-            place: index + 1,
-            participantId: participant.id,
-            userId: participant.userId,
-            displayName: participant.displayName,
-            score: participant.score,
-            answersCount: participant.answers?.length ?? 0,
-        }));
+        .map((participant, index) => {
+            const { answeredQuestionsCount, correctAnswersCount, accuracyPercent } = getParticipantAccuracy(participant);
+
+            return {
+                place: index + 1,
+                participantId: participant.id,
+                userId: participant.userId,
+                displayName: participant.displayName,
+                score: participant.score,
+                answersCount: answeredQuestionsCount,
+                correctAnswersCount,
+                accuracyPercent,
+            };
+        });
 }
 
 export function serializeRoom(room, { includeCorrectAnswers = false } = {}) {
@@ -313,23 +345,37 @@ async function recordMissingAnswers(room) {
             .filter((participant) => participant.answers?.some((answer) => answer.questionId === question.id))
             .map((participant) => participant.id),
     );
-    const missingAnswers = room.participants
-        .filter((participant) => !answeredParticipantIds.has(participant.id))
-        .map((participant) => ({
-            participantId: participant.id,
-            questionId: question.id,
-            selectedOptionIds: [],
-            isCorrect: false,
-            score: 0,
-            responseTimeMs: room.quiz.timeLimit * 1000,
-            answeredAt: new Date(),
-        }));
+    const missingParticipants = room.participants.filter((participant) => !answeredParticipantIds.has(participant.id));
+    const missingAnswers = missingParticipants.map((participant) => ({
+        participantId: participant.id,
+        questionId: question.id,
+        selectedOptionIds: [],
+        isCorrect: false,
+        score: 0,
+        responseTimeMs: room.quiz.timeLimit * 1000,
+        answeredAt: new Date(),
+    }));
 
     if (missingAnswers.length) {
-        await prisma.participantAnswer.createMany({
-            data: missingAnswers,
-            skipDuplicates: true,
-        });
+        await prisma.$transaction([
+            prisma.participantAnswer.createMany({
+                data: missingAnswers,
+                skipDuplicates: true,
+            }),
+            ...missingParticipants.map((participant) => {
+                const { answeredQuestionsCount, correctAnswersCount } = getParticipantAccuracy(participant);
+                const nextAnswersCount = answeredQuestionsCount + 1;
+
+                return prisma.participant.update({
+                    where: { id: participant.id },
+                    data: {
+                        answeredQuestionsCount: nextAnswersCount,
+                        correctAnswersCount,
+                        accuracyPercent: Math.round((correctAnswersCount / nextAnswersCount) * 100),
+                    },
+                });
+            }),
+        ]);
     }
 }
 
@@ -487,6 +533,13 @@ export async function submitAnswer(roomId, userId, selectedOptionIds = []) {
         responseTimeMs,
         timeLimit: room.quiz.timeLimit,
     });
+    const {
+        answeredQuestionsCount: previousAnswersCount,
+        correctAnswersCount: previousCorrectAnswersCount,
+    } = getParticipantAccuracy(participant);
+    const nextAnswersCount = previousAnswersCount + 1;
+    const nextCorrectAnswersCount = previousCorrectAnswersCount + (isCorrect ? 1 : 0);
+    const accuracyPercent = Math.round((nextCorrectAnswersCount / nextAnswersCount) * 100);
 
     try {
         await prisma.$transaction([
@@ -507,6 +560,9 @@ export async function submitAnswer(roomId, userId, selectedOptionIds = []) {
                     score: {
                         increment: score,
                     },
+                    answeredQuestionsCount: nextAnswersCount,
+                    correctAnswersCount: nextCorrectAnswersCount,
+                    accuracyPercent,
                 },
             }),
         ]);

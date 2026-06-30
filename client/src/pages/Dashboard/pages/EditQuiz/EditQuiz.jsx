@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchQuiz, updateQuiz } from "../../../../api/quizApi";
+import { useLanguage } from "../../../../hooks/useLanguage";
 import DashboardPanel from "../../components/DashboardPanel";
 import QuizBuilder from "../CreateQuiz/QuizBuilder";
 
@@ -11,6 +12,7 @@ function getErrorMessage(error) {
 function EditQuiz() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { t } = useLanguage();
     const [quiz, setQuiz] = useState(null);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(true);
@@ -54,11 +56,11 @@ function EditQuiz() {
 
     return (
         <DashboardPanel
-            title="Редактировать квиз"
-            subtitle="Измените параметры, вопросы и варианты ответов. Сохранение заменит текущий набор вопросов."
+            title={t("quiz.editTitle")}
+            subtitle={t("quiz.editSubtitle")}
         >
             {isLoading ? (
-                <p className="text-sm font-semibold text-slate-500">Загрузка квиза...</p>
+                <p className="text-sm font-semibold text-slate-500">{t("quiz.loading")}</p>
             ) : error ? (
                 <div className="rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
                     {error}
@@ -68,7 +70,7 @@ function EditQuiz() {
                     key={quiz.id}
                     initialQuiz={quiz}
                     onSubmit={handleSubmit}
-                    submitLabel="Сохранить изменения"
+                    submitLabel={t("quiz.saveChanges")}
                 />
             )}
         </DashboardPanel>

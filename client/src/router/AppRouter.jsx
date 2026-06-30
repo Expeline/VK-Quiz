@@ -99,8 +99,18 @@ function AppRouter() {
                         element={<RoleRoute allowedRoles={[ROLES.PARTICIPANT]}><ParticipantHistory /></RoleRoute>}
                     />
                     <Route path="rooms/:id" element={<LiveRoom />} />
-                    <Route path="profile" element={<Profile />} />
                 </Route>
+
+                <Route
+                    path="/profile"
+                    element={
+                        <ProtectedRoute>
+                            <MainLayout>
+                                <Profile />
+                            </MainLayout>
+                        </ProtectedRoute>
+                    }
+                />
 
                 <Route path="*" element={<NotFound />} />
 

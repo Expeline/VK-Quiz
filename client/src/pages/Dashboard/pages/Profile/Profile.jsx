@@ -1,15 +1,21 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { uploadImage } from "../../../../api/uploadApi";
 import Button from "../../../../components/ui/Button";
+import ThemeToggle from "../../../../components/ThemeToggle/ThemeToggle";
+import { useConfirm } from "../../../../hooks/useConfirm";
 import { useAuth } from "../../../../hooks/useAuth";
-import DashboardPanel from "../../components/DashboardPanel";
+import { useLanguage } from "../../../../hooks/useLanguage";
 
 function getErrorMessage(error) {
     return error?.response?.data?.message ?? "Не удалось сохранить профиль.";
 }
 
 function Profile() {
-    const { user, updateProfile } = useAuth();
+    const { user, updateProfile, logout } = useAuth();
+    const { language, setLanguage, t } = useLanguage();
+    const { confirm } = useConfirm();
+    const navigate = useNavigate();
     const [form, setForm] = useState({
         name: user.name,
         avatarUrl: user.avatarUrl ?? "",
@@ -45,7 +51,7 @@ function Profile() {
 
         try {
             await updateProfile(form);
-            setSuccess("Профиль сохранен.");
+            setSuccess(t("profile.saved"));
         } catch (submitError) {
             setError(getErrorMessage(submitError));
         } finally {
@@ -53,11 +59,28 @@ function Profile() {
         }
     };
 
+    const handleLogout = async () => {
+        const confirmed = await confirm({
+            title: t("profile.logoutConfirm.title"),
+            text: t("profile.logoutConfirm.text"),
+            confirmLabel: t("profile.logout"),
+        });
+
+        if (!confirmed) {
+            return;
+        }
+
+        logout();
+        navigate("/", { replace: true });
+    };
+
     return (
-        <DashboardPanel
-            title="Профиль"
-            subtitle="Измените имя и аватарку, которые видят другие участники комнаты."
-        >
+        <section className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:rounded-[2rem] lg:p-8">
+            <div className="mb-6 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                <p className="text-sm font-black uppercase tracking-[0.16em] text-brand-600">{t("profile.title")}</p>
+                <p className="mt-2 text-sm leading-6 text-slate-500">{t("profile.subtitle")}</p>
+            </div>
+
             <form className="grid gap-6" onSubmit={handleSubmit}>
                 {error && (
                     <div className="rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
@@ -80,7 +103,7 @@ function Profile() {
                             )}
                         </div>
                         <label className="mt-4 inline-flex h-10 cursor-pointer items-center justify-center rounded-full border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-900 shadow-sm transition hover:border-brand-200 hover:bg-brand-50">
-                            {isUploading ? "Загрузка..." : "Выбрать аватар"}
+                            {isUploading ? t("profile.avatar.uploading") : t("profile.avatar.choose")}
                             <input
                                 type="file"
                                 accept="image/*"
@@ -92,7 +115,7 @@ function Profile() {
 
                     <div className="grid gap-5">
                         <label className="block">
-                            <span className="mb-2 block text-sm font-semibold text-slate-700">Имя</span>
+                            <span className="mb-2 block text-sm font-semibold text-slate-700">{t("profile.name")}</span>
                             <input
                                 type="text"
                                 value={form.name}
@@ -107,18 +130,43 @@ function Profile() {
                                 <p className="mt-2 break-all text-lg font-black text-slate-950">{user.email}</p>
                             </div>
                             <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                                <p className="text-sm font-semibold text-slate-500">Роль</p>
+                                <p className="text-sm font-semibold text-slate-500">{t("profile.role")}</p>
                                 <p className="mt-2 text-lg font-black text-slate-950">{user.role}</p>
                             </div>
                         </div>
+
+                        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                            <p className="text-sm font-semibold text-slate-500">{t("common.theme")}</p>
+                            <div className="mt-3">
+                                <ThemeToggle />
+                            </div>
+                        </div>
+
+                        <label className="block rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                            <span className="mb-3 block text-sm font-semibold text-slate-500">{t("common.language")}</span>
+                            <select
+                                value={language}
+                                onChange={(event) => setLanguage(event.target.value)}
+                                className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 font-bold text-slate-950 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
+                            >
+                                <option value="ru">🇷🇺 Русский</option>
+                                <option value="en">🇬🇧 English</option>
+                                <option value="fr">🇫🇷 Francais</option>
+                            </select>
+                        </label>
                     </div>
                 </div>
 
-                <Button type="submit" className="w-fit" disabled={isSaving || isUploading}>
-                    {isSaving ? "Сохранение..." : "Сохранить профиль"}
-                </Button>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <Button type="submit" disabled={isSaving || isUploading}>
+                        {isSaving ? t("profile.saving") : t("profile.save")}
+                    </Button>
+                    <Button type="button" variant="danger" onClick={handleLogout}>
+                        {t("profile.logout")}
+                    </Button>
+                </div>
             </form>
-        </DashboardPanel>
+        </section>
     );
 }
 

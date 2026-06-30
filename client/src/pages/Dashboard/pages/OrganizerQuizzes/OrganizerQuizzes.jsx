@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Button from "../../../../components/ui/Button";
 import { deleteQuiz, fetchQuizzes } from "../../../../api/quizApi";
 import { createRoom } from "../../../../api/roomApi";
+import { useConfirm } from "../../../../hooks/useConfirm";
+import { useLanguage } from "../../../../hooks/useLanguage";
 import DashboardPanel from "../../components/DashboardPanel";
 
 const statusLabels = {
@@ -18,6 +20,8 @@ function getErrorMessage(error) {
 
 function OrganizerQuizzes() {
     const navigate = useNavigate();
+    const { confirm } = useConfirm();
+    const { t } = useLanguage();
     const [quizzes, setQuizzes] = useState([]);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(true);
@@ -56,7 +60,13 @@ function OrganizerQuizzes() {
     }, []);
 
     const handleDelete = async (quizId) => {
-        if (!confirm("Удалить квиз без возможности восстановления?")) {
+        const confirmed = await confirm({
+            title: t("quiz.deleteQuiz.title"),
+            text: t("quiz.deleteQuiz.text"),
+            confirmLabel: t("common.remove"),
+        });
+
+        if (!confirmed) {
             return;
         }
 
@@ -89,9 +99,9 @@ function OrganizerQuizzes() {
 
     return (
         <DashboardPanel
-            title="Мои квизы"
-            subtitle="Управляйте черновиками и готовыми квизами."
-            action={<Button to="/dashboard/organizer/create" size="sm">Создать квиз</Button>}
+            title={t("organizerQuizzes.title")}
+            subtitle={t("organizerQuizzes.subtitle")}
+            action={!isLoading && quizzes.length > 0 ? <Button to="/dashboard/organizer/create" size="sm">{t("dashboard.createQuiz")}</Button> : null}
         >
             {error && (
                 <div className="mb-5 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
@@ -100,15 +110,15 @@ function OrganizerQuizzes() {
             )}
 
             {isLoading ? (
-                <p className="text-sm font-semibold text-slate-500">Загрузка квизов...</p>
+                <p className="text-sm font-semibold text-slate-500">{t("organizerQuizzes.loading")}</p>
             ) : quizzes.length === 0 ? (
                 <div className="rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
-                    <h3 className="text-xl font-black text-slate-950">Квизов пока нет</h3>
+                    <h3 className="text-xl font-black text-slate-950">{t("organizerQuizzes.emptyTitle")}</h3>
                     <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
-                        Создайте первый квиз, добавьте вопросы и сохраните черновик.
+                        {t("organizerQuizzes.emptyText")}
                     </p>
                     <Button to="/dashboard/organizer/create" className="mt-5">
-                        Создать квиз
+                        {t("dashboard.createQuiz")}
                     </Button>
                 </div>
             ) : (
@@ -119,7 +129,7 @@ function OrganizerQuizzes() {
                                 <div className="min-w-0">
                                     <h3 className="break-words text-lg font-black text-slate-950 sm:text-xl">{quiz.title}</h3>
                                     <p className="mt-2 text-sm text-slate-500">
-                                        {quiz._count?.questions ?? 0} вопросов
+                                        {t("organizerQuizzes.questions", { count: quiz._count?.questions ?? 0 })}
                                     </p>
                                 </div>
                                 <span className="w-fit shrink-0 rounded-full bg-white px-3 py-1 text-xs font-bold text-brand-700 shadow-sm">
@@ -138,19 +148,19 @@ function OrganizerQuizzes() {
                                     onClick={() => handleCreateRoom(quiz.id)}
                                     disabled={creatingRoomId === quiz.id}
                                 >
-                                    {creatingRoomId === quiz.id ? "Создание..." : "Комната"}
+                                    {creatingRoomId === quiz.id ? t("organizerQuizzes.creating") : t("organizerQuizzes.room")}
                                 </Button>
                                 <Button to={`/dashboard/organizer/quizzes/${quiz.id}/edit`} variant="secondary" size="sm">
-                                    Редактировать
+                                    {t("organizerQuizzes.edit")}
                                 </Button>
                                 <Button
                                     type="button"
-                                    variant="ghost"
+                                    variant="danger"
                                     size="sm"
                                     onClick={() => handleDelete(quiz.id)}
                                     disabled={deletingId === quiz.id}
                                 >
-                                    {deletingId === quiz.id ? "Удаление..." : "Удалить"}
+                                    {deletingId === quiz.id ? t("organizerQuizzes.deleting") : t("common.remove")}
                                 </Button>
                             </div>
                         </article>

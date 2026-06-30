@@ -50,39 +50,39 @@ model User {
 }
 
 model Quiz {
-  id          String      @id @default(cuid())
+  id          String     @id @default(cuid())
   title       String
   description String?
   category    String?
-  timeLimit   Int         @default(30)
+  timeLimit   Int        @default(30)
   rules       String?
-  showResults Boolean     @default(true)
-  status      QuizStatus  @default(DRAFT)
+  showResults Boolean    @default(true)
+  status      QuizStatus @default(DRAFT)
   creatorId   String
-  creator     User        @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creator     User       @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   questions   Question[]
   rooms       Room[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 
   @@index([creatorId])
 }
 
 model Question {
-  id        String       @id @default(cuid())
+  id        String              @id @default(cuid())
   quizId    String
-  quiz      Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quiz      Quiz                @relation(fields: [quizId], references: [id], onDelete: Cascade)
   text      String
   imageUrl  String?
-  type      QuestionType @default(SINGLE_CHOICE)
+  type      QuestionType        @default(SINGLE_CHOICE)
   order     Int
   options   Option[]
   answers   ParticipantAnswer[]
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
 
-  @@index([quizId])
   @@unique([quizId, order])
+  @@index([quizId])
 }
 
 model Option {
@@ -121,21 +121,24 @@ model Room {
 }
 
 model Participant {
-  id          String              @id @default(cuid())
-  roomId      String
-  room        Room                @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  userId      String?
-  user        User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
-  displayName String
-  score       Int                 @default(0)
-  joinedAt    DateTime            @default(now())
-  answers     ParticipantAnswer[]
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
+  id                     String              @id @default(cuid())
+  roomId                 String
+  room                   Room                @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  userId                 String?
+  user                   User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  displayName            String
+  score                  Int                 @default(0)
+  answeredQuestionsCount Int                 @default(0)
+  correctAnswersCount    Int                 @default(0)
+  accuracyPercent        Int                 @default(0)
+  joinedAt               DateTime            @default(now())
+  answers                ParticipantAnswer[]
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
 
+  @@unique([roomId, userId])
   @@index([roomId])
   @@index([userId])
-  @@unique([roomId, userId])
 }
 
 model ParticipantAnswer {
@@ -152,7 +155,7 @@ model ParticipantAnswer {
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
 
+  @@unique([participantId, questionId])
   @@index([participantId])
   @@index([questionId])
-  @@unique([participantId, questionId])
 }

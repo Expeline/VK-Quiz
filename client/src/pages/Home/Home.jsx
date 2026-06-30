@@ -4,10 +4,10 @@ import { useAuth } from "../../hooks/useAuth";
 import { useLanguage } from "../../hooks/useLanguage";
 
 const leaderboard = [
-    { nameKey: "home.leaderboard.1", initials: "AQ", quizzes: 42, score: 9840, color: "bg-emerald-500" },
-    { nameKey: "home.leaderboard.2", initials: "MK", quizzes: 37, score: 9160, color: "bg-lime-500" },
-    { nameKey: "home.leaderboard.3", initials: "SF", quizzes: 31, score: 8720, color: "bg-teal-500" },
-    { nameKey: "home.leaderboard.4", initials: "LP", quizzes: 28, score: 8010, color: "bg-green-600" },
+    { nameKey: "home.leaderboard.1", emoji: "🧠", quizzes: 42, score: 9840, color: "bg-emerald-500" },
+    { nameKey: "home.leaderboard.2", emoji: "⚡", quizzes: 37, score: 9160, color: "bg-lime-500" },
+    { nameKey: "home.leaderboard.3", emoji: "🎯", quizzes: 31, score: 8720, color: "bg-teal-500" },
+    { nameKey: "home.leaderboard.4", emoji: "🚀", quizzes: 28, score: 8010, color: "bg-green-600" },
 ];
 
 function Home() {
@@ -75,8 +75,8 @@ function Home() {
                                 >
                                     <div className="flex items-center gap-3 sm:gap-4">
                                         <div className="w-5 text-center text-base font-black text-brand-700 sm:w-8 sm:text-lg">{index + 1}</div>
-                                        <div className={`grid size-9 shrink-0 place-items-center rounded-full ${entry.color} text-lg font-black text-white shadow-lg shadow-brand-600/20 sm:size-10 sm:text-xl`}>
-                                            {entry.initials}
+                                        <div className={`grid size-9 shrink-0 place-items-center rounded-full ${entry.color} text-lg shadow-lg shadow-brand-600/20 sm:size-10 sm:text-xl`}>
+                                            <span aria-hidden="true">{entry.emoji}</span>
                                         </div>
                                         <div className="min-w-0 flex-1">
                                             <div className="flex items-center justify-between gap-3">

@@ -37,13 +37,13 @@ function MainLayout({ children }) {
     }, [pathname, t]);
 
     return (
-        <div className="min-h-screen transition-colors duration-300">
+        <div className="relative isolate min-h-screen transition-colors duration-300">
             <EmojiBackdrop />
             <Navbar />
 
             <main
                 className={[
-                    "app-shell relative box-border max-w-7xl px-0 sm:px-6 lg:px-8",
+                    "app-shell relative z-10 box-border max-w-7xl px-0 sm:px-6 lg:px-8",
                     isHome ? "pb-28 pt-5 sm:pt-6 lg:pb-5" : "pb-28 pt-5 sm:pt-8 lg:pb-16",
                 ].join(" ")}
             >
